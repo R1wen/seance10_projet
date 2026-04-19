@@ -4,7 +4,10 @@
       "Bash(npm install *)",
       "Bash(npx tailwindcss *)",
       "Bash(./node_modules/.bin/tailwindcss init *)",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Bash(docker exec *)",
+      "Bash(npx prisma *)",
+      "Bash(node -e ' *)"
     ]
   }
 }
