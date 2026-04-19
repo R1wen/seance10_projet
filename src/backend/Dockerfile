@@ -9,6 +9,7 @@ RUN npm ci
 COPY prisma ./prisma
 COPY src ./src
 COPY tsconfig.json ./
+COPY tsconfig.test.json ./
 COPY prisma.config.ts ./
 
 ARG DATABASE_URL=postgresql://placeholder:placeholder@localhost:5432/placeholder
