@@ -1,0 +1,15 @@
+aws_region   = "us-east-1"
+project_name = "ecommerce"
+environment  = "production"
+
+# Database
+db_username       = "postgres"
+db_password       = "change_me_strong_password"
+db_instance_class = "db.t3.micro"
+
+# ECS images (fill after pushing to ECR)
+backend_image  = "123456789.dkr.ecr.us-east-1.amazonaws.com/ecommerce-backend:latest"
+frontend_image = "123456789.dkr.ecr.us-east-1.amazonaws.com/ecommerce-frontend:latest"
+
+# App secrets
+jwt_secret = "change_me_jwt_secret"
