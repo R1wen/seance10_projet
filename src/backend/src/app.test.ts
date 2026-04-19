@@ -4,6 +4,7 @@ import app from './app';
 jest.mock('./lib/prisma', () => ({
   __esModule: true,
   default: {
+    $queryRaw: jest.fn().mockResolvedValue([{ '?column?': 1 }]),
     user: {
       findUnique: jest.fn(),
       create: jest.fn(),
