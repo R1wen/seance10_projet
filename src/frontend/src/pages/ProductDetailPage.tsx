@@ -1,0 +1,85 @@
+import { useParams, Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { getProduct } from '../api/products';
+
+export default function ProductDetailPage() {
+  const { id } = useParams<{ id: string }>();
+
+  const { data: product, isLoading, isError } = useQuery({
+    queryKey: ['product', id],
+    queryFn: () => getProduct(id!),
+    enabled: !!id,
+  });
+
+  if (isLoading) {
+    return <div className="flex justify-center items-center h-64 text-gray-400">Loading…</div>;
+  }
+
+  if (isError || !product) {
+    return (
+      <div className="max-w-2xl mx-auto px-4 py-16 text-center">
+        <p className="text-red-500 text-lg font-semibold">Product not found.</p>
+        <Link to="/products" className="text-blue-600 text-sm mt-4 inline-block hover:underline">
+          Back to products
+        </Link>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-4xl mx-auto px-4 py-8">
+      <Link to="/products" className="text-sm text-blue-600 hover:underline mb-6 inline-block">
+        ← Back to products
+      </Link>
+
+      <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden flex flex-col md:flex-row">
+        <div className="md:w-1/2 h-72 md:h-auto bg-gray-100 flex items-center justify-center">
+          {product.imageUrl ? (
+            <img
+              src={product.imageUrl}
+              alt={product.name}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <span className="text-gray-400 text-sm">No image</span>
+          )}
+        </div>
+
+        <div className="p-8 flex flex-col gap-4 flex-1">
+          <div className="flex items-start justify-between gap-4">
+            <h1 className="text-2xl font-bold text-gray-900">{product.name}</h1>
+            <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full whitespace-nowrap">
+              {product.category}
+            </span>
+          </div>
+
+          <p className="text-gray-500 leading-relaxed">
+            {product.description ?? 'No description available.'}
+          </p>
+
+          <div className="flex items-center gap-4 mt-2">
+            <span className="text-3xl font-bold text-blue-600">
+              ${Number(product.price).toFixed(2)}
+            </span>
+            <span
+              className={`text-sm font-medium px-2 py-0.5 rounded-full ${
+                product.stock > 0
+                  ? 'bg-green-100 text-green-700'
+                  : 'bg-red-100 text-red-600'
+              }`}
+            >
+              {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
+            </span>
+          </div>
+
+          <button
+            disabled={product.stock === 0}
+            className="mt-4 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-semibold py-3 px-6 rounded-xl"
+          >
+            Add to Cart
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
