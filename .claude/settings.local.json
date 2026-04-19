@@ -7,7 +7,9 @@
       "Bash(npm run *)",
       "Bash(docker exec *)",
       "Bash(npx prisma *)",
-      "Bash(node -e ' *)"
+      "Bash(node -e ' *)",
+      "PowerShell(Get-NetTCPConnection -LocalPort 5432 -ErrorAction SilentlyContinue)",
+      "Bash(npm test *)"
     ]
   }
 }
