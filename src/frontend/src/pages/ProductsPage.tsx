@@ -31,12 +31,12 @@ export default function ProductsPage() {
           placeholder="Search products…"
           value={search}
           onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-          className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="flex-1 border border-gray-300 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
         />
         <select
           value={category}
           onChange={(e) => { setCategory(e.target.value === 'All' ? '' : e.target.value); setPage(1); }}
-          className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+          className="border border-gray-300 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black bg-white"
         >
           {CATEGORIES.map((c) => (
             <option key={c} value={c === 'All' ? '' : c}>{c}</option>
@@ -69,19 +69,19 @@ export default function ProductsPage() {
               <button
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page === 1}
-                className="px-4 py-2 text-sm border border-gray-300 rounded-lg disabled:opacity-40 hover:bg-gray-50"
+                className="px-4 py-2 text-sm border border-gray-300 rounded-full disabled:opacity-40 hover:bg-gray-50"
               >
-                Previous
+                ← Previous
               </button>
               <span className="text-sm text-gray-500">
-                Page {page} / {data.pagination.pages}
+                {page} / {data.pagination.pages}
               </span>
               <button
                 onClick={() => setPage((p) => Math.min(data.pagination.pages, p + 1))}
                 disabled={page === data.pagination.pages}
-                className="px-4 py-2 text-sm border border-gray-300 rounded-lg disabled:opacity-40 hover:bg-gray-50"
+                className="px-4 py-2 text-sm border border-gray-300 rounded-full disabled:opacity-40 hover:bg-gray-50"
               >
-                Next
+                Next →
               </button>
             </div>
           )}

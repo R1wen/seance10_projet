@@ -38,8 +38,8 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-8 w-full max-w-sm">
+    <div className="min-h-screen flex items-center justify-center bg-[#F9F9F9]">
+      <div className="bg-white rounded-2xl border border-gray-200 p-8 w-full max-w-sm">
         <h1 className="text-2xl font-bold text-gray-900 mb-6">Create account</h1>
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
@@ -48,7 +48,7 @@ export default function RegisterPage() {
             <input
               type="text"
               {...register('name')}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
               placeholder="John Doe"
             />
             {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
@@ -59,7 +59,7 @@ export default function RegisterPage() {
             <input
               type="email"
               {...register('email')}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
               placeholder="you@example.com"
             />
             {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
@@ -70,7 +70,7 @@ export default function RegisterPage() {
             <input
               type="password"
               {...register('password')}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
               placeholder="••••••••"
             />
             {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
@@ -81,7 +81,7 @@ export default function RegisterPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white font-medium py-2 rounded-lg text-sm"
+            className="bg-black hover:bg-gray-900 disabled:opacity-60 text-white font-medium py-2 rounded-full text-sm"
           >
             {isSubmitting ? 'Creating account…' : 'Create account'}
           </button>
@@ -89,7 +89,7 @@ export default function RegisterPage() {
 
         <p className="mt-4 text-center text-sm text-gray-500">
           Already have an account?{' '}
-          <Link to="/login" className="text-blue-600 font-medium hover:underline">
+          <Link to="/login" className="text-black font-medium hover:underline">
             Sign in
           </Link>
         </p>

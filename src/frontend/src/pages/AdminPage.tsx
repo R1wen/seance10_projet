@@ -75,7 +75,7 @@ function ProductForm({
   };
 
   const inputClass =
-    'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500';
+    'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black';
   const labelClass = 'block text-sm font-medium text-gray-700 mb-1';
 
   return (
@@ -123,7 +123,7 @@ function ProductForm({
         <button
           type="submit"
           disabled={isSubmitting}
-          className="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white rounded-lg font-medium"
+          className="px-4 py-2 text-sm bg-black hover:bg-gray-900 disabled:opacity-60 text-white rounded-lg font-medium"
         >
           {isSubmitting ? 'Saving…' : initial ? 'Update' : 'Create'}
         </button>
@@ -159,7 +159,7 @@ export default function AdminPage() {
         <h1 className="text-3xl font-bold text-gray-900">Admin — Products</h1>
         <button
           onClick={() => setModalProduct('new')}
-          className="bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-lg font-medium"
+          className="bg-black hover:bg-gray-900 text-white text-sm px-4 py-2 rounded-lg font-medium"
         >
           + Add Product
         </button>
@@ -208,7 +208,7 @@ export default function AdminPage() {
                       <div className="flex justify-end gap-2">
                         <button
                           onClick={() => setModalProduct(p)}
-                          className="text-blue-600 hover:text-blue-800 font-medium"
+                          className="text-gray-700 hover:text-black font-medium"
                         >
                           Edit
                         </button>
@@ -231,9 +231,9 @@ export default function AdminPage() {
               <button
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page === 1}
-                className="px-4 py-2 text-sm border border-gray-300 rounded-lg disabled:opacity-40 hover:bg-gray-50"
+                className="px-4 py-2 text-sm border border-gray-300 rounded-full disabled:opacity-40 hover:bg-gray-50"
               >
-                Previous
+                ← Previous
               </button>
               <span className="text-sm text-gray-500">
                 Page {page} / {data.pagination.pages}
@@ -241,9 +241,9 @@ export default function AdminPage() {
               <button
                 onClick={() => setPage((p) => Math.min(data.pagination.pages, p + 1))}
                 disabled={page === data.pagination.pages}
-                className="px-4 py-2 text-sm border border-gray-300 rounded-lg disabled:opacity-40 hover:bg-gray-50"
+                className="px-4 py-2 text-sm border border-gray-300 rounded-full disabled:opacity-40 hover:bg-gray-50"
               >
-                Next
+                Next →
               </button>
             </div>
           )}
