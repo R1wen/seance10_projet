@@ -19,7 +19,7 @@ export default function ProductDetailPage() {
     return (
       <div className="max-w-2xl mx-auto px-4 py-16 text-center">
         <p className="text-red-500 text-lg font-semibold">Product not found.</p>
-        <Link to="/products" className="text-blue-600 text-sm mt-4 inline-block hover:underline">
+        <Link to="/products" className="text-gray-600 hover:text-black text-sm mt-4 inline-block">
           Back to products
         </Link>
       </div>
@@ -28,7 +28,7 @@ export default function ProductDetailPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-      <Link to="/products" className="text-sm text-blue-600 hover:underline mb-6 inline-block">
+      <Link to="/products" className="text-sm text-gray-600 hover:text-black mb-6 inline-block">
         ← Back to products
       </Link>
 
@@ -48,7 +48,7 @@ export default function ProductDetailPage() {
         <div className="p-8 flex flex-col gap-4 flex-1">
           <div className="flex items-start justify-between gap-4">
             <h1 className="text-2xl font-bold text-gray-900">{product.name}</h1>
-            <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full whitespace-nowrap">
+            <span className="text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded-full whitespace-nowrap">
               {product.category}
             </span>
           </div>
@@ -58,7 +58,7 @@ export default function ProductDetailPage() {
           </p>
 
           <div className="flex items-center gap-4 mt-2">
-            <span className="text-3xl font-bold text-blue-600">
+            <span className="text-3xl font-bold text-black">
               ${Number(product.price).toFixed(2)}
             </span>
             <span
@@ -74,7 +74,7 @@ export default function ProductDetailPage() {
 
           <button
             disabled={product.stock === 0}
-            className="mt-4 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-semibold py-3 px-6 rounded-xl"
+            className="mt-4 bg-black hover:bg-gray-900 disabled:opacity-50 text-white font-semibold py-3 px-6 rounded-full"
           >
             Add to Cart
           </button>
