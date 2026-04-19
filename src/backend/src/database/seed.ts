@@ -37,11 +37,11 @@ async function main() {
   });
 
   const products = [
-    { name: 'Laptop Pro', description: 'High performance laptop', price: 1299.99, category: 'Electronics', stock: 50 },
-    { name: 'Wireless Mouse', description: 'Ergonomic wireless mouse', price: 29.99, category: 'Electronics', stock: 200 },
-    { name: 'Desk Chair', description: 'Comfortable office chair', price: 349.99, category: 'Furniture', stock: 30 },
-    { name: 'Coffee Mug', description: 'Large ceramic mug', price: 12.99, category: 'Kitchen', stock: 500 },
-    { name: 'Notebook A5', description: 'Lined notebook A5', price: 8.99, category: 'Stationery', stock: 300 },
+    { name: 'Laptop Pro', description: 'High performance laptop', price: 1299.99, category: 'Electronics', stock: 50, imageUrl: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400' },
+    { name: 'Wireless Mouse', description: 'Ergonomic wireless mouse', price: 29.99, category: 'Electronics', stock: 200, imageUrl: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400' },
+    { name: 'Desk Chair', description: 'Comfortable office chair', price: 349.99, category: 'Furniture', stock: 30, imageUrl: 'https://images.unsplash.com/photo-1580480055273-228ff5388ef8?w=400' },
+    { name: 'Coffee Mug', description: 'Large ceramic mug', price: 12.99, category: 'Kitchen', stock: 500, imageUrl: 'https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?w=400' },
+    { name: 'Notebook A5', description: 'Lined notebook A5', price: 8.99, category: 'Stationery', stock: 300, imageUrl: 'https://images.unsplash.com/photo-1531346878377-a5be20888e57?w=400' },
   ];
 
   await prisma.product.deleteMany({});
