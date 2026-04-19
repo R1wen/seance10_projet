@@ -18,5 +18,37 @@ services:
       timeout: 5s
       retries: 5
 
+  backend:
+    build:
+      context: ./src/backend
+      dockerfile: Dockerfile
+    container_name: ecommerce-backend
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://postgres:password@postgres:5432/ecommerce
+      PORT: 3000
+      NODE_ENV: development
+      JWT_SECRET: your_super_secret_jwt_key_here
+      JWT_EXPIRES_IN: 7d
+      FRONTEND_URL: http://localhost:5173
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./src/frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: http://localhost:3000/api
+    container_name: ecommerce-frontend
+    restart: unless-stopped
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
 volumes:
   postgres_data:
