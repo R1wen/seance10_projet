@@ -7,6 +7,7 @@ import { metricsMiddleware, getMetrics } from './middleware/metrics';
 import authRoutes from './routes/auth';
 import productRoutes from './routes/products';
 import userRoutes from './routes/users';
+import cartRoutes from './routes/cart';
 import prisma from './lib/prisma';
 
 const app = express();
@@ -51,6 +52,7 @@ app.get('/api/metrics', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/cart', cartRoutes);
 
 app.use(errorHandler);
 

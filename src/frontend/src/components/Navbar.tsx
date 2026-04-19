@@ -1,8 +1,10 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
 
 export default function Navbar() {
   const { isAuthenticated, isAdmin, user, logout } = useAuth();
+  const { totalItems } = useCart();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -22,6 +24,16 @@ export default function Navbar() {
         {isAdmin && (
           <Link to="/admin" className="text-gray-600 hover:text-black text-sm font-medium">
             Admin
+          </Link>
+        )}
+        {isAuthenticated && (
+          <Link to="/cart" className="relative text-gray-600 hover:text-black text-sm font-medium">
+            Cart
+            {totalItems > 0 && (
+              <span className="absolute -top-2 -right-3 bg-black text-white text-xs w-4 h-4 rounded-full flex items-center justify-center leading-none">
+                {totalItems > 9 ? '9+' : totalItems}
+              </span>
+            )}
           </Link>
         )}
         {isAuthenticated ? (

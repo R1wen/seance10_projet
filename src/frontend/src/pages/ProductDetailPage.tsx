@@ -1,9 +1,16 @@
+import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { getProduct } from '../api/products';
+import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
 
 export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const { isAuthenticated } = useAuth();
+  const { add } = useCart();
+  const [adding, setAdding] = useState(false);
+  const [added, setAdded] = useState(false);
 
   const { data: product, isLoading, isError } = useQuery({
     queryKey: ['product', id],
@@ -72,12 +79,31 @@ export default function ProductDetailPage() {
             </span>
           </div>
 
-          <button
-            disabled={product.stock === 0}
-            className="mt-4 bg-black hover:bg-gray-900 disabled:opacity-50 text-white font-semibold py-3 px-6 rounded-full"
-          >
-            Add to Cart
-          </button>
+          {isAuthenticated ? (
+            <button
+              disabled={product.stock === 0 || adding}
+              onClick={async () => {
+                setAdding(true);
+                try {
+                  await add(id!, 1);
+                  setAdded(true);
+                  setTimeout(() => setAdded(false), 2000);
+                } finally {
+                  setAdding(false);
+                }
+              }}
+              className="mt-4 bg-black hover:bg-gray-900 disabled:opacity-50 text-white font-semibold py-3 px-6 rounded-full"
+            >
+              {adding ? 'Adding…' : added ? 'Added!' : 'Add to Cart'}
+            </button>
+          ) : (
+            <Link
+              to="/login"
+              className="mt-4 inline-block bg-black hover:bg-gray-900 text-white font-semibold py-3 px-6 rounded-full text-center"
+            >
+              Login to add to cart
+            </Link>
+          )}
         </div>
       </div>
     </div>
