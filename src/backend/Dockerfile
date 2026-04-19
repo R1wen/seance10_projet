@@ -11,6 +11,8 @@ COPY src ./src
 COPY tsconfig.json ./
 COPY prisma.config.ts ./
 
+ARG DATABASE_URL=postgresql://placeholder:placeholder@localhost:5432/placeholder
+ENV DATABASE_URL=$DATABASE_URL
 RUN npx prisma generate --schema prisma/schema.prisma
 RUN npm run build
 
