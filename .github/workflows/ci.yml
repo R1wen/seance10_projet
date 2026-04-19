@@ -29,6 +29,8 @@ jobs:
       - name: Generate Prisma client
         working-directory: src/backend
         run: npx prisma generate --schema prisma/schema.prisma
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
       - name: Run tests with coverage
         working-directory: src/backend
@@ -83,6 +85,9 @@ jobs:
         run: npm run build
         env:
           VITE_API_URL: http://localhost:3000/api
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
       - name: Build Docker image
         uses: docker/build-push-action@v6
