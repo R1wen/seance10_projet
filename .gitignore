@@ -24,6 +24,7 @@ infrastructure/terraform/.terraform.lock.hcl
 # OS
 .DS_Store
 Thumbs.db
+/.claude/
 
 # IDE
 .vscode/
