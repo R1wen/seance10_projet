@@ -153,7 +153,7 @@ resource "aws_cloudwatch_metric_alarm" "rds_storage_low" {
   namespace           = "AWS/RDS"
   period              = 300
   statistic           = "Average"
-  threshold           = 2147483648 # 2 GB in bytes
+  threshold           = 2147483648
 
   dimensions = {
     DBInstanceIdentifier = aws_db_instance.main.identifier
@@ -178,14 +178,11 @@ resource "aws_cloudwatch_dashboard" "main" {
         width  = 12
         height = 6
         properties = {
-          title  = "Backend CPU Utilization"
-          period = 60
-          stat   = "Average"
-          metrics = [[
-            "AWS/ECS", "CPUUtilization",
-            "ClusterName", aws_ecs_cluster.main.name,
-            "ServiceName", aws_ecs_service.backend.name
-          ]]
+          title   = "Backend CPU Utilization"
+          region  = var.aws_region
+          period  = 60
+          stat    = "Average"
+          metrics = [["AWS/ECS", "CPUUtilization", "ClusterName", aws_ecs_cluster.main.name, "ServiceName", aws_ecs_service.backend.name]]
         }
       },
       {
@@ -193,9 +190,10 @@ resource "aws_cloudwatch_dashboard" "main" {
         width  = 12
         height = 6
         properties = {
-          title  = "ALB Request Count & 5xx Errors"
-          period = 60
-          stat   = "Sum"
+          title   = "ALB Request Count and 5xx Errors"
+          region  = var.aws_region
+          period  = 60
+          stat    = "Sum"
           metrics = [
             ["AWS/ApplicationELB", "RequestCount", "LoadBalancer", aws_lb.main.arn_suffix],
             ["AWS/ApplicationELB", "HTTPCode_Target_5XX_Count", "LoadBalancer", aws_lb.main.arn_suffix]
@@ -207,13 +205,11 @@ resource "aws_cloudwatch_dashboard" "main" {
         width  = 12
         height = 6
         properties = {
-          title  = "ALB Target Response Time (p99)"
-          period = 60
-          stat   = "p99"
-          metrics = [[
-            "AWS/ApplicationELB", "TargetResponseTime",
-            "LoadBalancer", aws_lb.main.arn_suffix
-          ]]
+          title   = "ALB Target Response Time"
+          region  = var.aws_region
+          period  = 60
+          stat    = "p99"
+          metrics = [["AWS/ApplicationELB", "TargetResponseTime", "LoadBalancer", aws_lb.main.arn_suffix]]
         }
       },
       {
@@ -221,12 +217,23 @@ resource "aws_cloudwatch_dashboard" "main" {
         width  = 12
         height = 6
         properties = {
-          title  = "RDS Connections & Storage"
-          period = 60
-          metrics = [
-            [{ "stat" = "Average" }, "AWS/RDS", "DatabaseConnections", "DBInstanceIdentifier", aws_db_instance.main.identifier],
-            [{ "stat" = "Average" }, "AWS/RDS", "FreeStorageSpace", "DBInstanceIdentifier", aws_db_instance.main.identifier]
-          ]
+          title   = "RDS Connections"
+          region  = var.aws_region
+          period  = 60
+          stat    = "Average"
+          metrics = [["AWS/RDS", "DatabaseConnections", "DBInstanceIdentifier", aws_db_instance.main.identifier]]
+        }
+      },
+      {
+        type   = "metric"
+        width  = 12
+        height = 6
+        properties = {
+          title   = "RDS Free Storage"
+          region  = var.aws_region
+          period  = 60
+          stat    = "Average"
+          metrics = [["AWS/RDS", "FreeStorageSpace", "DBInstanceIdentifier", aws_db_instance.main.identifier]]
         }
       }
     ]
