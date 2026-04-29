@@ -1,6 +1,14 @@
+name: CD
+
+on:
+  workflow_run:
+    workflows: [CI]
+    branches: [main]
+    types: [completed]
+
 jobs:
-  deploy:
-    name: Build and Deploy to AWS
+  deploy-backend:
+    name: Build & push backend Docker image
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
@@ -8,7 +16,57 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 1. Connexion à AWS
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        run: |
+          echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Build & push backend
+        uses: docker/build-push-action@v6
+        with:
+          context: src/backend
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/ecommerce-backend:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/ecommerce-backend:${{ steps.meta.outputs.sha_short }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy-frontend:
+    name: Build & deploy frontend to AWS S3 + CloudFront
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: src/frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: src/frontend
+        run: npm ci
+
+      - name: Build frontend
+        working-directory: src/frontend
+        run: npm run build
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -16,37 +74,17 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      # 2. Connexion à Amazon ECR
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
-
-      # 3. Build & Push Backend vers ECR
-      - name: Build and push Backend
-        uses: docker/build-push-action@v6
-        with:
-          context: src/backend
-          push: true
-          # On utilise l'URL ECR récupérée dynamiquement
-          tags: ${{ steps.login-ecr.outputs.registry }}/ecommerce-backend:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      # 4. Build & Push Frontend vers ECR (avec ta variable VITE_API_URL)
-      - name: Build and push Frontend
-        uses: docker/build-push-action@v6
-        with:
-          context: src/frontend
-          push: true
-          tags: ${{ steps.login-ecr.outputs.registry }}/ecommerce-frontend:latest
-          # On injecte la variable pour corriger le problème localhost
-          build-args: |
-            VITE_API_URL=${{ secrets.VITE_API_URL }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      # 5. Déploiement forcé sur ECS
-      - name: Update ECS services
+      - name: Deploy to S3
         run: |
-          aws ecs update-service --cluster ecommerce-cluster --service backend-service --force-new-deployment
-          aws ecs update-service --cluster ecommerce-cluster --service frontend-service --force-new-deployment
+          aws s3 sync src/frontend/dist/ s3://${{ secrets.S3_BUCKET_NAME }}/ \
+            --delete \
+            --cache-control "public,max-age=31536000,immutable" \
+            --exclude "index.html"
+          aws s3 cp src/frontend/dist/index.html s3://${{ secrets.S3_BUCKET_NAME }}/index.html \
+            --cache-control "no-cache,no-store,must-revalidate"
+
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/*"

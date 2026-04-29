@@ -34,7 +34,7 @@ COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
 COPY --from=builder /app/tsconfig.json ./tsconfig.json
 COPY healthcheck.js ./
 COPY entrypoint.sh ./
-RUN chmod +x entrypoint.sh
+RUN sed -i 's/\r//' entrypoint.sh && chmod +x entrypoint.sh
 
 EXPOSE 3000
 

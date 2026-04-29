@@ -1,7 +1,7 @@
 #!/bin/sh
 
 echo "Running Prisma migrations..."
-npx prisma migrate deploy --schema prisma/schema.prisma
+DATABASE_URL="$DATABASE_URL" npx prisma migrate deploy || echo "Migration failed, continuing..."
 
 echo "Seeding database..."
 node dist/database/seed.js || echo "Seed failed, continuing anyway..."
